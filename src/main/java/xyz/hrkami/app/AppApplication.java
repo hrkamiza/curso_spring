@@ -1,5 +1,6 @@
 package xyz.hrkami.app;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +13,20 @@ import xyz.hrkami.app.entities.Cidade;
 import xyz.hrkami.app.entities.Cliente;
 import xyz.hrkami.app.entities.Endereco;
 import xyz.hrkami.app.entities.Estado;
+import xyz.hrkami.app.entities.Pagamento;
+import xyz.hrkami.app.entities.PagamentoComBoleto;
+import xyz.hrkami.app.entities.PagamentoComCartao;
+import xyz.hrkami.app.entities.Pedido;
 import xyz.hrkami.app.entities.Produto;
+import xyz.hrkami.app.entities.enums.EstadoPagamento;
 import xyz.hrkami.app.entities.enums.TipoCliente;
 import xyz.hrkami.app.repositories.CategoriaRepository;
 import xyz.hrkami.app.repositories.CidadeRepository;
 import xyz.hrkami.app.repositories.ClienteRepository;
 import xyz.hrkami.app.repositories.EnderecoRepository;
 import xyz.hrkami.app.repositories.EstadoRepository;
+import xyz.hrkami.app.repositories.PagamentoRepository;
+import xyz.hrkami.app.repositories.PedidoRepository;
 import xyz.hrkami.app.repositories.ProdutoRepository;
 
 @SpringBootApplication
@@ -41,6 +49,12 @@ public class AppApplication implements CommandLineRunner {
 
 	@Autowired
 	ClienteRepository clienterepository;
+
+	@Autowired
+	PedidoRepository pedidorepository;
+
+	@Autowired
+	PagamentoRepository pagamentorepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(AppApplication.class, args);
@@ -81,9 +95,27 @@ public class AppApplication implements CommandLineRunner {
 		Endereco end2 = new Endereco(null, "Avenida Matos", "105", "Sala 800", "Centro", "38777012", cli1, cid2);
 
 		cli1.getEnderecos().addAll(Arrays.asList(end1, end2));
-		
+
 		clienterepository.saveAll(Arrays.asList(cli1));
-		enderecorepository.saveAll(Arrays.asList(end1,end2));
+		enderecorepository.saveAll(Arrays.asList(end1, end2));
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
+		Pedido ped1 = new Pedido(null, sdf.parse("30/09/2017  10:32"), cli1, end1);
+		Pedido ped2 = new Pedido(null, sdf.parse("10/10/2017  19:35"), cli1, end2);
+
+		Pagamento pgto1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped1, 6);
+		ped1.setPagamento(pgto1);
+		Pagamento pgto2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("20/10/2017 00:00"),
+				null);
+		ped1.setPagamento(pgto2);
+
+		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
+
+		pagamentorepository.saveAll(Arrays.asList(pgto1, pgto2));
+		pedidorepository.saveAll(Arrays.asList(ped1, ped2));
+
+		
 
 		produtorepository.saveAll(Arrays.asList(p1, p2, p3));
 		categoriarepository.saveAll(Arrays.asList(cat1, cat2));

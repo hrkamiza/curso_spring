@@ -5,22 +5,22 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import xyz.hrkami.app.entities.Pedido;
-import xyz.hrkami.app.repositories.PedidoRepository;
+import xyz.hrkami.app.entities.Pagamento;
+import xyz.hrkami.app.repositories.PagamentoRepository;
 import xyz.hrkami.app.services.exceptions.ObjectNotFoundException;
 
 @Service
-public class ProdutoService {
+public class PagamentoService {
 
 	@Autowired
-	PedidoRepository repo;
+	PagamentoRepository repo;
 
-	public Pedido find(Integer id) {
+	public Pagamento find(Integer id) {
 
-		Optional<Pedido> obj = repo.findById(id);
+		Optional<Pagamento> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 
-				"Objeto nao encontrado ID : " + id + " , Tipo :" + Pedido.class.getName()));
+				"Objeto nao encontrado ID : " + id + " , Tipo :" + Pagamento.class.getName()));
 
 	}
 }
