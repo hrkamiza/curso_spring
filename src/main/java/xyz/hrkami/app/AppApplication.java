@@ -115,8 +115,6 @@ public class AppApplication implements CommandLineRunner {
 		pagamentorepository.saveAll(Arrays.asList(pgto1, pgto2));
 		pedidorepository.saveAll(Arrays.asList(ped1, ped2));
 
-		
-
 		produtorepository.saveAll(Arrays.asList(p1, p2, p3));
 		categoriarepository.saveAll(Arrays.asList(cat1, cat2));
 
