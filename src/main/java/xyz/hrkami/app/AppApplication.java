@@ -13,6 +13,7 @@ import xyz.hrkami.app.entities.Cidade;
 import xyz.hrkami.app.entities.Cliente;
 import xyz.hrkami.app.entities.Endereco;
 import xyz.hrkami.app.entities.Estado;
+import xyz.hrkami.app.entities.ItemPedido;
 import xyz.hrkami.app.entities.Pagamento;
 import xyz.hrkami.app.entities.PagamentoComBoleto;
 import xyz.hrkami.app.entities.PagamentoComCartao;
@@ -25,6 +26,7 @@ import xyz.hrkami.app.repositories.CidadeRepository;
 import xyz.hrkami.app.repositories.ClienteRepository;
 import xyz.hrkami.app.repositories.EnderecoRepository;
 import xyz.hrkami.app.repositories.EstadoRepository;
+import xyz.hrkami.app.repositories.ItemPedidoRepository;
 import xyz.hrkami.app.repositories.PagamentoRepository;
 import xyz.hrkami.app.repositories.PedidoRepository;
 import xyz.hrkami.app.repositories.ProdutoRepository;
@@ -55,6 +57,9 @@ public class AppApplication implements CommandLineRunner {
 
 	@Autowired
 	PagamentoRepository pagamentorepository;
+	
+	@Autowired
+	ItemPedidoRepository itempedidorepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(AppApplication.class, args);
@@ -112,11 +117,26 @@ public class AppApplication implements CommandLineRunner {
 
 		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
 
-		pagamentorepository.saveAll(Arrays.asList(pgto1, pgto2));
+		pagamentorepository.saveAll(Arrays.asList(pgto1, pgto2));	
 		pedidorepository.saveAll(Arrays.asList(ped1, ped2));
-
+		
 		produtorepository.saveAll(Arrays.asList(p1, p2, p3));
 		categoriarepository.saveAll(Arrays.asList(cat1, cat2));
+		
+		ItemPedido ip1 = new ItemPedido(ped1, p1, 0.00, 1, 2000.00);
+		ItemPedido ip2 = new ItemPedido(ped1, p3, 0.00,2 , 80.00);
+		ItemPedido ip3 = new ItemPedido(ped2, p2, 100.00, 1, 800.00);
+		
+		ped1.getItens().addAll(Arrays.asList(ip1,ip2));
+		ped2.getItens().addAll(Arrays.asList(ip3));
+		
+		p1.getItens().addAll(Arrays.asList(ip1));
+		p2.getItens().addAll(Arrays.asList(ip3));
+		p3.getItens().addAll(Arrays.asList(ip2));
+		
+		itempedidorepository.saveAll(Arrays.asList(ip1,ip2,ip3));
+		
+
 
 	}
 
